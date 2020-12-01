@@ -1,0 +1,22 @@
+{
+  "name": "socks-proxy",
+  "version": "1.0.0",
+  "description": "HTTPS communications going through SOCKS Proxy",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ScientistMallikarjunan/socks-proxy.git"
+  },
+  "keywords": [
+    "socks-proxy"
+  ],
+  "author": "Mallikarjunan_M",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ScientistMallikarjunan/socks-proxy/issues"
+  },
+  "homepage": "https://github.com/ScientistMallikarjunan/socks-proxy#readme"
+}
