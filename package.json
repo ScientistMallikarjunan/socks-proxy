@@ -14,5 +14,8 @@
     "socks-proxy"
   ],
   "author": "Malliakrjunan_M",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "socks": "^2.5.0"
+  }
 }
