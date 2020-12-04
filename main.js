@@ -1,51 +1,111 @@
-//SOCKS Proxy agent
+/**
+ * 
+ * 1. Extending the https.Agent
+ * 2. Creating a connection to the socks proxy server using socks library
+ * 3. Upgrade the socks connection to TLS connection
+ * 
+ */
 
-const SocksClient = require('socks').SocksClient;
+const https = require('https');
+const url = require('url');
+const tls = require('tls');
+const { SocksClient } = require('socks');
+
+const { SOCKS_CONSTANTS } = require('./Enums');
 
 
-class SocksProxy 
+class SocksProxyAgent extends https.Agent
 {
-    constructor()
+    constructor(proxyOptions)
     {
-        this.destinationHost = "100.106.93.113";
-        this.destinationPort = 443;
-        this.proxyHost = "100.106.93.104";
-        this.proxyPort = 1080;
-        this.options = {
-            proxy: {
-                host: this.proxyHost,
-                port: this.proxyPort,
-                type: 5
-            },
-            command: 'connect',
-            destination: {
-                host: this.destinationHost,
-                port: this.destinationPort
+        this.proxyOptions = this.parseSocksProxy(proxyOptions);
+    }
+
+    /**
+     * 
+     * Default SOCKS port is consideres as 1080
+     * Default type is SOCKS5
+     * 
+     */
+    parseSocksProxy(options)
+    {
+        let socksProxyOptions = {
+            hostname: "",
+            port: 1080,
+            type: 5
+        }
+        try
+        {
+            if(typeof options === 'object')
+            {
+                socksProxyOptions.hostname = options.hostname;
+                if(options.port)
+                {
+                    socksProxyOptions.port = options.port;
+                }
+                if(options.type)
+                {
+                    socksProxyOptions.type = options.type;
+                }
+                socksProxyOptions.userId = options.userId || options.username;
+                socksProxyOptions.password = options.password;
             }
-        };
-        this.__initialize();
+            else if(typeof options === 'string')
+            {
+                let opts = url.parse(options);
+                if(opts.protocol)
+                {
+                    switch(opts.protocol)
+                    {
+                        case SOCKS_CONSTANTS.SOCKS4:
+                            socksProxyOptions.type = 4;
+                            break;
+                        case SOCKS_CONSTANTS.SOCKS4A:
+                            socksProxyOptions.type = 4;
+                            break;
+                        case SOCKS_CONSTANTS.SOCKS5:
+                        case SOCKS_CONSTANTS.SOCKS5H:
+                            socksProxyOptions.type = 5;
+                            break;
+                        default:
+                            socksProxyOptions.type = 5;
+                            break;
+                    }
+                }
+                socksProxyOptions.userId = opts.userId || opts.username;
+                socksProxyOptions.password = opts.password;
+                if (opts.auth) 
+                {
+                    const auth = opts.auth.split(':');
+                    socksProxyOptions.userId = auth[0];
+                    socksProxyOptions.password = auth[1];
+                }
+            }
+        }
+        catch(err)
+        {
+            console.log(err);
+        }
+        console.log(socksProxyOptions);
+        return socksProxyOptions;
     }
 
-    __initialize()
-    {
-        this.__connect(this.options);
-    }
 
-    async __connect(options)
+    async __initialize()
     {
-        // Async/Await
-        try 
+        try
         {
-            const info = await SocksClient.createConnection(options);
-            console.log(info.socket);
-            // <Socket ...>  (this is a raw net.Socket that is established to the destination host through the given proxy server)
-        } 
-        catch (err) 
+            let socksOptions = {
+                proxy: this.proxyOptions,
+                command: 'connect',
+                destination: ''
+            };
+        }
+        catch(err)
         {
-            // Handle errors
             console.log(err);
         }
     }
 }
 
-new SocksProxy();
+export default SocksProxyAgent;

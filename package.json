@@ -2,20 +2,22 @@
   "name": "custom-socks-proxy-agent",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
+  "dependencies": {
+    "socks": "^2.5.1"
+  },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ScientistMallikarjunan/"
+    "url": "git+https://github.com/ScientistMallikarjunan/socks-proxy.git"
   },
-  "keywords": [
-    "socks-proxy"
-  ],
-  "author": "Malliakrjunan_M",
+  "author": "Mallikarjunan_M",
   "license": "ISC",
-  "dependencies": {
-    "socks": "^2.5.0"
-  }
+  "bugs": {
+    "url": "https://github.com/ScientistMallikarjunan/socks-proxy/issues"
+  },
+  "homepage": "https://github.com/ScientistMallikarjunan/socks-proxy#readme"
 }
